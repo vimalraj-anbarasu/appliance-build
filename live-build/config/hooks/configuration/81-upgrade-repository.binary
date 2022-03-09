@@ -109,6 +109,10 @@ cp config/hooks/template.ctl delphix-entire.ctl
 # shellcheck disable=SC2016
 chroot binary dpkg-query -Wf '${Package}=${Version}\n' | sort >packages.list
 
+if [[ -n "$AWS_S3_LINUX_PACKAGES_LIST" ]]; then
+	aws s3 cp --only-show-errors packages.list "$AWS_S3_LINUX_PACKAGES_LIST"/"linux-packages-$APPLIANCE_PLATFORM"
+fi
+
 echo "$APPLIANCE_VARIANT" >variant
 
 test -n "$DELPHIX_APPLIANCE_VERSION"
